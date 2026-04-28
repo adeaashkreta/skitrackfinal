@@ -16,7 +16,13 @@ const connectMySQL = async () => {
   return pool;
 };
 
-const getMySQLPool = () => pool;
+const getMySQLPool = () => {
+  if (!pool) {
+    throw new Error("MySQL pool is not initialized. Call connectMySQL first.");
+  }
+
+  return pool;
+};
 
 module.exports = {
   connectMySQL,
