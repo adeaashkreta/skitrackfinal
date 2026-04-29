@@ -3,6 +3,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
 const authRoutes = require("./routes/auth.routes");
+const resortRoutes = require("./routes/resort.routes");
+const userManagementRoutes = require("./routes/user-management.routes");
+const resortManagerRoutes = require("./routes/resort-manager.routes");
+const facilityRoutes = require("./routes/facility.routes");
 
 const app = express();
 
@@ -35,5 +39,9 @@ app.get("/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/resorts", resortRoutes);
+app.use("/api/resort-managers", resortManagerRoutes);
+app.use("/api", userManagementRoutes);
+app.use("/api", facilityRoutes);
 
 module.exports = app;
