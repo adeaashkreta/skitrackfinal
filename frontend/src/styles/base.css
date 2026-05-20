@@ -1,0 +1,44 @@
+/*
+  base.css
+
+  Ky file përmban stilizimet bazë të krejt aplikacionit SkiTrack.
+  Këtu vendosen vetëm CSS që vlejnë për gjithë projektin, si:
+  reset styles, body, links, buttons, inputs dhe container global.
+
+  Mos vendosni këtu CSS specifike për faqe ose komponenta.
+  Për shembull:
+  - Navbar styles shkojnë në Navbar.css
+  - Login styles shkojnë në Login.css
+  - Resorts styles shkojnë në Resorts.css
+*/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: #f5f7fb;
+  color: #1f2937;
+  font-family: Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
+
+input {
+  outline: none;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}

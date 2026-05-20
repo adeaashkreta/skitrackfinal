@@ -1,24 +1,32 @@
-import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import Resorts from "./pages/Resorts";
+import ResortDetails from "./pages/ResortDetails";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Favorites from "./pages/Favorites";
+import Bookings from "./pages/Bookings";
+import Rentals from "./pages/Rentals";
+import Conditions from "./pages/Conditions";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [page, setPage] = useState("home");
-
   return (
-    <div>
-      <nav style={{ background: "#222", color: "white", padding: "10px" }}>
-        <span onClick={() => setPage("home")} style={{ marginRight: "15px", cursor: "pointer" }}>Home</span>
-        <span onClick={() => setPage("resorts")} style={{ marginRight: "15px", cursor: "pointer" }}>Resorts</span>
-        <span onClick={() => setPage("booking")} style={{ marginRight: "15px", cursor: "pointer" }}>Booking</span>
-        <span onClick={() => setPage("rentals")} style={{ cursor: "pointer" }}>Rentals</span>
-      </nav>
-
-      <div style={{ padding: "20px" }}>
-        {page === "home" && <h1>Welcome to SkiTrack</h1>}
-        {page === "resorts" && <h1>Resorts Page</h1>}
-        {page === "booking" && <h1>Booking Page</h1>}
-        {page === "rentals" && <h1>Rentals Page</h1>}
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/resorts" element={<Resorts />} />
+        <Route path="/resorts/:id" element={<ResortDetails />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/favorites" element={<Favorites />} />
+        <Route path="/bookings" element={<Bookings />} />
+        <Route path="/rentals" element={<Rentals />} />
+        <Route path="/conditions" element={<Conditions />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
