@@ -7,6 +7,9 @@ const resortRoutes = require("./routes/resort.routes");
 const userManagementRoutes = require("./routes/user-management.routes");
 const resortManagerRoutes = require("./routes/resort-manager.routes");
 const facilityRoutes = require("./routes/facility.routes");
+const serviceRoutes = require("./routes/service.routes");
+const favoriteRoutes = require("./routes/favorite.routes"); 
+const reviewRoutes = require("./routes/review.routes");
 
 const app = express();
 
@@ -43,5 +46,8 @@ app.use("/api/resorts", resortRoutes);
 app.use("/api/resort-managers", resortManagerRoutes);
 app.use("/api", userManagementRoutes);
 app.use("/api", facilityRoutes);
+app.use("/api", serviceRoutes);
+app.use("/api", favoriteRoutes);
+app.use("/api", reviewRoutes);
 
 module.exports = app;
