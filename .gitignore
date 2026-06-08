@@ -1,110 +1,32 @@
-# ========================
-# Dependencies
-# ========================
-node_modules/
-jspm_packages/
-bower_components/
-
-# ========================
-# Environment variables
-# ========================
-.env
-.env.*
-!.env.example
-
-# ========================
 # Logs
-# ========================
-logs/
+logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
 lerna-debug.log*
 
-# ========================
-# Runtime files
-# ========================
-pids/
-*.pid
-*.seed
-*.pid.lock
+node_modules
+dist
+dist-ssr
+.output
+.vinxi
+.tanstack/**
+.nitro
+*.local
 
-# ========================
-# Coverage & testing
-# ========================
-coverage/
-*.lcov
-.nyc_output/
+# Wrangler / Cloudflare
+.wrangler/
+.dev.vars
 
-# ========================
-# Build outputs
-# ========================
-dist/
-build/
-out/
-.next/
-.nuxt/
-.output/
-.svelte-kit/
-.vuepress/dist
-**/.vitepress/dist
-
-# ========================
-# Cache
-# ========================
-.cache/
-.parcel-cache/
-.vite/
-.temp/
-.eslintcache
-.stylelintcache
-
-# ========================
-# TypeScript
-# ========================
-*.tsbuildinfo
-
-# ========================
-# OS / System files
-# ========================
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
-Thumbs.db
-
-# ========================
-# IDE / Editors
-# ========================
-.vscode/
-.vscode-test/
-.idea/
-
-# ========================
-# Package managers
-# ========================
-.pnpm-store
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
-
-# ========================
-# Misc
-# ========================
-*.tgz
-.node_repl_history
-.lock-wscript
-
-# ========================
-# Serverless / Cloud
-# ========================
-.serverless/
-.dynamodb/
-.firebase/
-
-# ========================
-# Reports
-# ========================
-report.*.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

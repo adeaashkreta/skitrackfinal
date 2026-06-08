@@ -1,0 +1,31 @@
+import {
+  Waves,
+  Sparkles,
+  Utensils,
+  Dumbbell,
+  ConciergeBell,
+  Users,
+  Wine,
+  Coffee,
+  Ban,
+  Wifi,
+  Bath,
+  Flame,
+  type LucideIcon,
+} from "lucide-react";
+
+export const FACILITY_META: Record<string, { icon: LucideIcon; label: string }> = {
+  "indoor-pool": { icon: Waves, label: "Indoor swimming pool" },
+  spa: { icon: Sparkles, label: "Spa" },
+  "non-smoking": { icon: Ban, label: "Non-smoking rooms" },
+  restaurant: { icon: Utensils, label: "Restaurant" },
+  fitness: { icon: Dumbbell, label: "Fitness center" },
+  "room-service": { icon: ConciergeBell, label: "Room service" },
+  "family-rooms": { icon: Users, label: "Family rooms" },
+  bar: { icon: Wine, label: "Bar" },
+  breakfast: { icon: Coffee, label: "Wonderful breakfast" },
+  wifi: { icon: Wifi, label: "Free WiFi" },
+  bathtub: { icon: Bath, label: "Bathtub" },
+  sauna: { icon: Flame, label: "Sauna" },
+  "hot-tub": { icon: Waves, label: "Hot tub" },
+};

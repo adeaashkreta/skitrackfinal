@@ -1,0 +1,11 @@
+cd server  [HIN NE FOLDERIN SERVER]    ** KJO ESHTE PER BACKEND**
+npm install
+npm run seed
+npm run dev
+[MONGO DB DEFAULT Port, Hape mongodb, siguroje qe eshte running, 27017]
+MONGO instalon prej: https://www.mongodb.com/try/download/community
+
+
+cd ROOT (Root folder, folderi kryesor, kthehesh mbrapa prej /server) ** PER FRONTEND**
+npm install
+npm run dev
