@@ -1,0 +1,10 @@
+
+NESE NUK TE DEL FILE .env. KRIJOJE NJE FILE TE RE .env ne /server the copy/paste kodin me poshte:
+
+
+
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/ski-resorts
+JWT_SECRET=your-secret-key-change-this-in-production
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:8080
