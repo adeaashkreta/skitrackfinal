@@ -1,0 +1,2 @@
+1) About section -> Become a partner. Case: useri klikon ne navbar, drejtohet tek about section, deshiron me u bo partner, hapet faqja ku aj mundet me apliku per partner dhe ne admin dashboard figuron ky aplikim, ku admini vendos a me aprovu apo jo.
+2) About Section -> Contact Support.  Case : useri klikon about/Support . Ristrikuroje UIUX

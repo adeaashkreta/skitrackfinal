@@ -1,0 +1,3 @@
+1) Search ne landing screen  -> Search ne /resorts. Case: Kur useri hap home page, shkrun zermatt, automatikisht drejtohet ne /resorts faqen dhe listimi filtrohet per Zermatt.
+2) Zermatt viewdetails/booknow faqja -> I'll Reserve. Case: Kur useri klikon I'll reserve, pasi te zgjedhi dhomen hapet mockup payment page, klikon paguaj, drejtohet automatikisht ne dashboard/mybookings  dhe resorti qe e ka rezervy shtohet tek upcoming trips. Nights booked perditsohen, Loyalty pooints shtohen.
+3) brenda dashboard mybookings ekzistojne dy upcoming trips. Fshije te dyten.
