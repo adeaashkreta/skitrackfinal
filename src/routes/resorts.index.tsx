@@ -11,7 +11,15 @@ import { Slider } from "@/components/ui/slider";
 import { resortsApi, type Resort } from "@/lib/api";
 import { demoResorts } from "@/lib/demoData";
 
+type ResortsSearch = {
+  q?: string;
+};
+
 export const Route = createFileRoute("/resorts/")({
+  validateSearch: (raw: Record<string, unknown>): ResortsSearch => {
+    const str = (v: unknown) => (typeof v === "string" && v.trim() ? v.trim() : undefined);
+    return { q: str(raw.q) };
+  },
   head: () => ({
     meta: [
       { title: "Resorts — SkiTrack" },
@@ -47,8 +55,13 @@ const REVIEW_TIERS: { value: Exclude<ReviewTier, "none">; label: string; min: nu
 ];
 
 function ResortsPage() {
+  const { q: urlQ } = Route.useSearch();
   const [resorts, setResorts] = useState<Resort[]>(demoResorts);
-  const [q, setQ] = useState("");
+  const [q, setQ] = useState(urlQ ?? "");
+
+  useEffect(() => {
+    setQ(urlQ ?? "");
+  }, [urlQ]);
   const [difficulty, setDifficulty] = useState("all");
   const [maxPrice, setMaxPrice] = useState(400);
   const [reviewTier, setReviewTier] = useState<ReviewTier>("none");
@@ -151,7 +164,14 @@ function ResortsPage() {
             </p>
           </div>
           <div className="lg:flex-1 lg:max-w-xl w-full">
-            <ResortsSearchBar value={search} onChange={setSearch} />
+            <ResortsSearchBar
+              value={search}
+              onChange={setSearch}
+              onSearch={() => {
+                // Scroll to results to show the filtered resorts
+                document.getElementById("resorts-grid")?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
           </div>
         </div>
 
@@ -270,7 +290,7 @@ function ResortsPage() {
             </FilterGroup>
           </aside>
 
-          <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <div id="resorts-grid" className="grid sm:grid-cols-2 xl:grid-cols-3 gap-6">
             {filtered.map((r) => (
               <ResortCard
                 key={r._id}

@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { bookingsApi, resortsApi, type Resort } from "@/lib/api";
+import { resortsApi, type Booking, type Resort } from "@/lib/api";
+import { PaymentCheckoutDialog } from "@/components/PaymentCheckoutDialog";
+import { bookingsStore } from "@/lib/bookingsStore";
 import { demoResorts } from "@/lib/demoData";
 import { FACILITY_META } from "@/lib/facilities";
 import { useAuth } from "@/context/AuthContext";
@@ -19,6 +21,15 @@ type DetailsSearch = {
   adults?: number;
   children?: number;
   rooms?: number;
+};
+
+type PendingBooking = {
+  resort: Resort;
+  startDate: string;
+  endDate: string;
+  guests: number;
+  totalPrice: number;
+  status: Booking["status"];
 };
 
 export const Route = createFileRoute("/resorts/$id")({
@@ -61,6 +72,8 @@ function ResortDetailsPage() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [roomCounts, setRoomCounts] = useState<Record<string, number>>({});
   const [contactOpen, setContactOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [pendingBooking, setPendingBooking] = useState<PendingBooking | null>(null);
 
   useEffect(() => {
     resortsApi.get(id).then((data) => data && setResort(data)).catch(() => {});
@@ -101,25 +114,67 @@ function ResortDetailsPage() {
     );
   }
 
-  const handleBook = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!user) { navigate({ to: "/login" }); return; }
-    if (nights <= 0) { toast.error("Pick a valid date range"); return; }
-    if (resort.roomTypes && resort.roomTypes.length > 0 && totalRooms === 0) {
-      toast.error("Select at least one room"); return;
-    }
-    setSubmitting(true);
-    try {
-      await bookingsApi.create({
-        resortId: resort._id, startDate, endDate, guests, totalPrice,
-      });
-      toast.success("Booking confirmed!");
-      navigate({ to: "/dashboard" });
-    } catch {
-      toast.success("Booking saved (demo mode)");
-      navigate({ to: "/dashboard" });
-    } finally { setSubmitting(false); }
-  };
+const handleBook = (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!user) {
+    navigate({ to: "/login" });
+    return;
+  }
+
+  if (nights <= 0) {
+    toast.error("Pick a valid date range");
+    return;
+  }
+
+  if (resort.roomTypes && resort.roomTypes.length > 0 && totalRooms === 0) {
+    toast.error("Select at least one room");
+    return;
+  }
+
+  setPendingBooking({
+    resort,
+    startDate,
+    endDate,
+    guests,
+    totalPrice,
+    status: "confirmed",
+  });
+
+  setPaymentOpen(true);
+};
+
+const handlePaymentSuccess = async () => {
+  if (!pendingBooking) {
+    toast.error("No booking selected");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    bookingsStore.add({
+      user: user?._id ?? "u1",
+      resort: pendingBooking.resort,
+      startDate: pendingBooking.startDate,
+      endDate: pendingBooking.endDate,
+      guests: pendingBooking.guests,
+      totalPrice: pendingBooking.totalPrice,
+      status: "confirmed",
+    });
+
+    toast.success("Payment successful! Booking confirmed.");
+    setPaymentOpen(false);
+    setPendingBooking(null);
+
+    navigate({
+      to: "/dashboard",
+      search: { tab: "bookings" },
+    });
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   const scrollToAvailability = () => {
     document.getElementById("availability")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -236,6 +291,16 @@ function ResortDetailsPage() {
 
         {resort && (
           <ContactResortDialog resort={resort} open={contactOpen} onOpenChange={setContactOpen} />
+        )}
+
+        {pendingBooking && (
+          <PaymentCheckoutDialog
+            open={paymentOpen}
+            onOpenChange={setPaymentOpen}
+            totalPrice={pendingBooking.totalPrice}
+            resortName={pendingBooking.resort.name}
+            onPaySuccess={handlePaymentSuccess}
+          />
         )}
 
 

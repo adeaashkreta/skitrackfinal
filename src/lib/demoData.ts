@@ -208,17 +208,6 @@ export const demoBookings: Booking[] = [
     status: "confirmed",
     createdAt: "2025-11-20",
   },
-  {
-    _id: "b2",
-    user: "u1",
-    resort: demoResorts[3],
-    startDate: "2026-02-02",
-    endDate: "2026-02-05",
-    guests: 4,
-    totalPrice: 175 * 3 * 4,
-    status: "pending",
-    createdAt: "2025-12-01",
-  },
 ];
 
 export const demoUsers: User[] = [

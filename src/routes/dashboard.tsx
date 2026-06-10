@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { bookingsApi, type Booking, type Resort } from "@/lib/api";
-import { demoBookings } from "@/lib/demoData";
+import { type Booking, type Resort } from "@/lib/api";
+import { bookingsStore } from "@/lib/bookingsStore";
 import { useAuth } from "@/context/AuthContext";
 import { CalendarDays } from "lucide-react";
 import { TicketsPanel } from "@/components/TicketsPanel";
@@ -21,7 +21,35 @@ import { ticketStore } from "@/lib/ticketStore";
 import { favoritesStore } from "@/lib/favoritesStore";
 import { totalPoints, getTier } from "@/lib/loyaltyStore";
 
+type DashboardTab =
+  | "bookings"
+  | "favorites"
+  | "payments"
+  | "loyalty"
+  | "tickets"
+  | "profile";
+
+type DashboardSearch = {
+  tab?: DashboardTab;
+};
+
 export const Route = createFileRoute("/dashboard")({
+  validateSearch: (raw: Record<string, unknown>): DashboardSearch => {
+    const tab = typeof raw.tab === "string" ? raw.tab : undefined;
+
+    if (
+      tab === "bookings" ||
+      tab === "favorites" ||
+      tab === "payments" ||
+      tab === "loyalty" ||
+      tab === "tickets" ||
+      tab === "profile"
+    ) {
+      return { tab };
+    }
+
+    return {};
+  },
   component: DashboardWrapper,
 });
 
@@ -37,14 +65,26 @@ function statusVariant(s: Booking["status"]) {
 
 function DashboardPage() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState<Booking[]>(demoBookings);
-  const [tab, setTab] = useState("bookings");
+  const search = Route.useSearch();
+  const [bookings, setBookings] = useState<Booking[]>(() => bookingsStore.list());
+  const [tab, setTab] = useState<DashboardTab>(search.tab ?? "bookings");
   const [openTickets, setOpenTickets] = useState(0);
   const [favCount, setFavCount] = useState(0);
 
-  useEffect(() => {
-    bookingsApi.my().then((d) => Array.isArray(d) && setBookings(d)).catch(() => {});
-  }, []);
+ useEffect(() => {
+  const refreshBookings = () => setBookings(bookingsStore.list());
+
+  refreshBookings();
+
+  return bookingsStore.subscribe(refreshBookings);
+ }, []);
+
+
+ useEffect(() => {
+  if (search.tab) {
+    setTab(search.tab);
+  }
+ }, [search.tab]);
 
   useEffect(() => {
     if (!user) return;
@@ -63,11 +103,11 @@ function DashboardPage() {
     return favoritesStore.subscribe(refresh);
   }, []);
 
-  const handleCancel = async (id: string) => {
-    try { await bookingsApi.cancel(id); } catch {}
-    setBookings((b) => b.map((x) => (x._id === id ? { ...x, status: "cancelled" } : x)));
-    toast.success("Booking cancelled");
-  };
+  const handleCancel = (id: string) => {
+  bookingsStore.cancel(id);
+  setBookings(bookingsStore.list());
+  toast.success("Booking cancelled");
+};
 
   const today = new Date().toISOString().slice(0, 10);
   const upcoming = bookings.filter((b) => b.endDate >= today && b.status !== "cancelled");
@@ -75,6 +115,18 @@ function DashboardPage() {
 
   const points = totalPoints(bookings);
   const { current } = getTier(points);
+  const handleTabChange = (nextTab: string) => {
+  if (
+    nextTab === "bookings" ||
+    nextTab === "favorites" ||
+    nextTab === "payments" ||
+    nextTab === "loyalty" ||
+    nextTab === "tickets" ||
+    nextTab === "profile"
+  ) {
+    setTab(nextTab);
+  }
+};
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,10 +139,10 @@ function DashboardPage() {
           loyaltyPoints={points}
           tier={current.tier}
           favoritesCount={favCount}
-          onTabChange={setTab}
+          onTabChange={handleTabChange}
         />
 
-        <Tabs value={tab} onValueChange={setTab} className="mt-10">
+        <Tabs value={tab} onValueChange={handleTabChange} className="mt-10">
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="bookings">Reservations</TabsTrigger>
             <TabsTrigger value="favorites">Favorites</TabsTrigger>

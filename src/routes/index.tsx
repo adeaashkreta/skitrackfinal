@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { Search, ArrowRight, Star, GraduationCap, Trophy, Users, Music, Sparkles, Waves, ChevronLeft, ChevronRight } from "lucide-react";
 import { MountainPeak, Gondola, Snowflake, Medal } from "@/components/icons/SkiIcons";
@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
+  const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const featured = demoResorts.slice(0, 3);
   const stripRef = useRef<HTMLDivElement>(null);
@@ -87,7 +88,11 @@ function HomePage() {
 
             {/* Search */}
             <form
-              onSubmit={(e) => { e.preventDefault(); window.location.href = `/resorts?q=${encodeURIComponent(query)}`; }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                const trimmed = query.trim();
+                navigate({ to: "/resorts", search: trimmed ? { q: trimmed } : {} });
+              }}
               className="mt-10 flex items-center gap-2 rounded-xl bg-white p-2 shadow-2xl max-w-xl"
             >
               <Search className="ml-2 h-5 w-5 text-muted-foreground" />
